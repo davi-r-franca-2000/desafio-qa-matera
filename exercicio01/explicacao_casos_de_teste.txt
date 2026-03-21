@@ -1,0 +1,48 @@
+TÉCNICAS DE TESTE UTILIZADAS E JUSTIFICATIVAS
+===============================================
+
+Abaixo estão as técnicas de teste aplicadas nos cenários do arquivo exercicio01.feature
+e o motivo pelo qual cada uma foi escolhida.
+
+
+1. PARTICIONAMENTO DE EQUIVALÊNCIA (Equivalence Partitioning)
+--------------------------------------------------------------
+
+Os campos de filtro da tela (Tipo de pessoa, Nome e E-mail) possuem domínios de
+entrada que podem ser divididos em classes válidas e inválidas. Por exemplo, um nome
+pode ser existente (classe válida) ou inexistente (classe inválida); um e-mail pode
+ter formato correto (classe válida) ou formato incorreto (classe inválida).
+
+Por que foi usada: testar um representante de cada classe é suficiente para garantir
+cobertura sem criar uma quantidade excessiva de casos de teste. Se o sistema funciona
+corretamente para um valor de uma classe, espera-se que funcione para todos os demais
+valores daquela mesma classe. Essa técnica é ideal para campos de entrada com domínios
+bem definidos, como os filtros desta tela.
+
+
+2. ANÁLISE DE VALOR LIMITE (Boundary Value Analysis)
+-----------------------------------------------------
+
+Campos de texto como "Nome" possuem restrições de comprimento — há um tamanho mínimo
+aceito e um tamanho máximo permitido. Os cenários testam exatamente nesses pontos
+limítrofes: o menor nome válido e um nome que excede o comprimento máximo.
+
+Por que foi usada: defeitos ocorrem com maior frequência nos limites dos domínios de
+entrada do que no centro. Testar no limite inferior (comprimento mínimo) e acima do
+limite superior (comprimento máximo) maximiza a chance de encontrar falhas com poucos
+casos de teste.
+
+
+3. TESTE DE COMBINAÇÃO DE PARÂMETROS (Combination/Pairwise Testing)
+--------------------------------------------------------------------
+
+A tela permite aplicar mais de um filtro simultaneamente (por exemplo, Tipo de pessoa
+junto com Nome). Os cenários incluem tanto uma combinação válida (tipo e nome que
+existem juntos) quanto uma combinação inválida (tipo e nome que não correspondem ao
+mesmo usuário).
+
+Por que foi usada: filtros individuais podem funcionar corretamente de forma isolada,
+mas apresentar defeitos quando combinados. Testar combinações garante que a lógica de
+interseção dos filtros está implementada corretamente, o que é crítico para uma tela
+de busca que oferece múltiplos critérios.
+
