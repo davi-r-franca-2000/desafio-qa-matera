@@ -1,0 +1,67 @@
+A) Reporte do bug e uso de logs
+
+Eu reportaria o bug seguindo as boas práticas do ISTQB, adaptando ao contexto da empresa. O reporte incluiria:
+
+Título do bug
+Descrição detalhada
+Ambiente (ex: branch, versão, navegador, ambiente de execução)
+Passos para reprodução
+Resultado esperado
+Resultado obtido
+Evidências (prints, vídeos, logs)
+Severidade (impacto técnico)
+Prioridade (urgência de correção)
+
+Além disso, utilizaria logs para auxiliar na análise e depuração do problema. Eu buscaria:
+
+Correlacionar logs usando timestamp e request/trace ID
+Identificar o endpoint afetado
+Analisar o payload enviado na requisição
+Verificar o status code e resposta da API
+
+Com isso, seria possível identificar em qual camada ocorreu o problema, por exemplo:
+
+validação de entrada na API
+lógica de negócio
+integração com banco de dados ou serviços externos
+
+#######################################################################################################
+
+B) Prevenção e mitigação do problema
+
+Se o bug poderia ter sido identificado antes, isso indica uma lacuna na estratégia de testes.
+
+Para mitigar esse tipo de problema, eu adotaria as seguintes ações:
+
+1. Melhoria na estratégia de testes:
+
+- Aumentar a cobertura de testes unitários
+- Incluir testes de integração (API + banco + serviços)
+- Implementar testes de contrato (schema) para garantir que a API respeite o formato esperado
+- Criar e manter testes de regressão automatizados
+
+2. Integração com CI/CD:
+
+- Incluir os testes automatizados no pipeline
+- Configurar o pipeline para bloquear o deploy em caso de falha
+- Garantir execução contínua a cada alteração na feature
+
+3. Priorização
+Priorizar testes em:
+- endpoints mais críticos
+- funcionalidades mais utilizadas
+- fluxos com maior impacto no cliente
+
+4. Monitoramento e observabilidade:
+Utilizar ferramentas como Grafana para monitoramento
+Acompanhar métricas como:
+ - taxa de erro (4xx, 5xx)
+ - latência
+ - volume de requisições
+Implementar alertas automáticos para falhas em produção
+Utilizar logs e, se possível, tracing distribuído para facilitar análise
+
+5. Testes negativos e cenários de borda
+Validar entradas inválidas
+Testar limites e edge cases
+Garantir que a API trate erros de forma controlada
