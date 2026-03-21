@@ -1,0 +1,47 @@
+TÉCNICAS DE TESTE UTILIZADAS E JUSTIFICATIVAS
+===============================================
+
+Abaixo estão as técnicas de teste aplicadas nos cenários do arquivo exercicio02.feature
+e o motivo pelo qual cada uma foi escolhida.
+
+
+1. PARTICIONAMENTO DE EQUIVALÊNCIA (Equivalence Partitioning)
+--------------------------------------------------------------
+
+O parâmetro "limit" do endpoint GET /breeds é dividido em classes de equivalência
+distintas: ausência do parâmetro, valor válido (5), valor acima do total de registros
+(200), zero (0), negativo (-1) e não numérico (abc). Cada cenário representa um
+valor de uma classe diferente.
+
+Por que foi usada: o parâmetro "limit" aceita diversos tipos de entrada, e cada
+classe se comporta de forma diferente na API. Testar um representante de cada classe
+garante cobertura ampla sem criar casos redundantes. Se a API trata corretamente
+limit=5, espera-se que trate outros valores positivos válidos da mesma forma.
+
+
+2. ANÁLISE DE VALOR LIMITE (Boundary Value Analysis)
+-----------------------------------------------------
+
+Os cenários exploram os pontos limítrofes do parâmetro "limit": zero (limite inferior
+exato entre válido e inválido), -1 (logo abaixo do limite inferior) e 200 (acima do
+total de registros existentes no banco).
+
+Por que foi usada: defeitos ocorrem com maior frequência nos limites dos domínios de
+entrada. Testar limit=0 e limit=-1 verifica como a API se comporta na fronteira entre
+valores aceitos e rejeitados. Testar limit=200 (acima do total) verifica se a API
+lida corretamente quando o valor solicitado excede a quantidade real de dados.
+
+
+3. VALIDAÇÃO DE CONTRATO / SCHEMA (Contract Testing)
+-----------------------------------------------------
+
+O cenário de validação de schema verifica a estrutura completa da resposta JSON:
+nomes dos campos, tipos de dados (number, string, array, null) e presença de todos
+os campos obrigatórios, tanto na paginação (current_page, data, total, per_page,
+last_page, URLs) quanto nos objetos de breed (breed, country, origin, coat, pattern).
+
+Por que foi usada: em APIs consumidas por outros sistemas, a estrutura da resposta
+é um contrato. Se um campo muda de nome, tipo ou deixa de existir, os consumidores
+quebram. A validação de contrato garante que alterações no backend não introduzam
+mudanças incompatíveis na resposta, funcionando como uma rede de segurança para
+integrações.
