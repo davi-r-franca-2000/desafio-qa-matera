@@ -68,12 +68,12 @@ matera/
 
 **Arquivos:**
 
-- `exercicio02.feature` — 7 cenários em Gherkin (Inglês): **3 happy paths**, **3 unhappy paths** e **1 validação de schema/contrato**.
+- `exercicio02.feature` — 13 cenários em Gherkin (Inglês): **6 happy paths**, **6 unhappy paths** e **1 validação de schema/contrato**.
 - `explicacao_casos_de_teste.txt` — justificativa das técnicas de teste aplicadas.
 
-**Cenários felizes:** requisição sem parâmetros, com `limit=5` e com `limit=200` (acima do total de registros).
+**Cenários felizes:** requisição sem parâmetros, com `limit=5`, com `limit=200` (acima do total de registros), `page=2`, combinação `page=2&limit=5` e última página.
 
-**Cenários infelizes:** `limit=0`, `limit=-1` e `limit=abc` (não numérico).
+**Cenários infelizes:** `limit=0`, `limit=-1`, `limit=abc` (não numérico), `page=9999` (além da última página), `page=-1` (negativo) e `page=abc` (não numérico).
 
 **Validação de contrato:** cenário com tabelas Gherkin detalhando os campos e tipos esperados na resposta (paginação e objetos breed), além de uma seção de comentários descrevendo a estratégia completa de validação — JSON Schema, verificação de campos obrigatórios, validação de tipos e uso de ferramentas como Pact/Dredd.
 
@@ -81,8 +81,9 @@ matera/
 
 | Técnica | Aplicação |
 |---------|-----------|
-| Particionamento de Equivalência | Classes do parâmetro `limit` (ausente, válido, zero, negativo, não numérico) |
-| Análise de Valor Limite | Valores limítrofes de `limit` (0, -1, acima do total) |
+| Particionamento de Equivalência | Classes dos parâmetros `limit` e `page` (ausente, válido, zero, negativo, não numérico, além do total) |
+| Análise de Valor Limite | Valores limítrofes de `limit` (0, -1, acima do total) e `page` (última página, além do total, negativo) |
+| Combinação de Parâmetros | `page` e `limit` aplicados simultaneamente |
 | Validação de Contrato | Estrutura JSON, campos obrigatórios e tipos de dados |
 
 ## Exercício 03 — Resolução de Problemas
