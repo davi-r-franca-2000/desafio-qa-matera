@@ -8,31 +8,53 @@ e o motivo pelo qual cada uma foi escolhida.
 1. PARTICIONAMENTO DE EQUIVALÊNCIA (Equivalence Partitioning)
 --------------------------------------------------------------
 
-O parâmetro "limit" do endpoint GET /breeds é dividido em classes de equivalência
-distintas: ausência do parâmetro, valor válido (5), valor acima do total de registros
-(200), zero (0), negativo (-1) e não numérico (abc). Cada cenário representa um
-valor de uma classe diferente.
+Os parâmetros "limit" e "page" do endpoint GET /breeds são divididos em classes
+de equivalência distintas. Para "limit": ausência do parâmetro, valor válido (5),
+valor acima do total de registros (200), zero (0), negativo (-1) e não numérico
+(abc). Para "page": valor válido (2), última página, página além do total (9999),
+negativo (-1) e não numérico (abc). Cada cenário representa um valor de uma
+classe diferente.
 
-Por que foi usada: o parâmetro "limit" aceita diversos tipos de entrada, e cada
+Por que foi usada: ambos os parâmetros aceitam diversos tipos de entrada, e cada
 classe se comporta de forma diferente na API. Testar um representante de cada classe
 garante cobertura ampla sem criar casos redundantes. Se a API trata corretamente
 limit=5, espera-se que trate outros valores positivos válidos da mesma forma.
+O mesmo raciocínio se aplica ao parâmetro "page".
 
 
 2. ANÁLISE DE VALOR LIMITE (Boundary Value Analysis)
 -----------------------------------------------------
 
-Os cenários exploram os pontos limítrofes do parâmetro "limit": zero (limite inferior
-exato entre válido e inválido), -1 (logo abaixo do limite inferior) e 200 (acima do
-total de registros existentes no banco).
+Os cenários exploram os pontos limítrofes dos parâmetros "limit" e "page". Para
+"limit": zero (limite inferior exato entre válido e inválido), -1 (logo abaixo do
+limite inferior) e 200 (acima do total de registros existentes no banco). Para
+"page": última página (limite superior válido), page=9999 (acima do total de
+páginas) e page=-1 (abaixo do limite inferior).
 
 Por que foi usada: defeitos ocorrem com maior frequência nos limites dos domínios de
 entrada. Testar limit=0 e limit=-1 verifica como a API se comporta na fronteira entre
 valores aceitos e rejeitados. Testar limit=200 (acima do total) verifica se a API
-lida corretamente quando o valor solicitado excede a quantidade real de dados.
+lida corretamente quando o valor solicitado excede a quantidade real de dados. O mesmo
+princípio se aplica ao "page": testar a última página e uma página além do total
+verifica o comportamento nos extremos da paginação.
 
 
-3. VALIDAÇÃO DE CONTRATO / SCHEMA (Contract Testing)
+3. TESTE DE COMBINAÇÃO DE PARÂMETROS (Combination Testing)
+------------------------------------------------------------
+
+Os cenários incluem a combinação dos parâmetros "page" e "limit" aplicados
+simultaneamente (GET /breeds?page=2&limit=5). Além disso, o parâmetro "page"
+é testado de forma isolada com as mesmas classes de equivalência aplicadas ao
+"limit": valor válido (page=2), última página, valor além do total de páginas
+(9999), negativo (-1) e não numérico (abc).
+
+Por que foi usada: parâmetros de paginação podem funcionar corretamente de
+forma isolada, mas apresentar defeitos quando combinados. Testar a interação
+entre "page" e "limit" garante que a lógica de paginação está implementada
+corretamente quando ambos os filtros são fornecidos na mesma requisição.
+
+
+4. VALIDAÇÃO DE CONTRATO / SCHEMA (Contract Testing)
 -----------------------------------------------------
 
 O cenário de validação de schema verifica a estrutura completa da resposta JSON:

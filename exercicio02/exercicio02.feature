@@ -2,10 +2,10 @@ Feature: Get cat breeds using /breeds endpoint
 
   As an API consumer
   I want to retrieve cat breeds
-  So that I can use the data according to the requested limit
+  So that I can use the data according to the requested limit and page
 
   # -------------------------
-  # HAPPY FLOWS (3)
+  # HAPPY FLOWS (6)
   # -------------------------
 
   Scenario: Retrieve breeds without limit parameter
@@ -30,8 +30,32 @@ Feature: Get cat breeds using /breeds endpoint
     And the "data" array should contain all available breeds
     And the "total" field should reflect the actual number of breeds in the database
 
+  Scenario: Retrieve breeds from a specific page
+    Given the API endpoint "/breeds" is available
+    When I send a GET request to "/breeds?page=2"
+    Then the response status code should be 200
+    And the response body should be a valid JSON
+    And the "current_page" field should be 2
+    And the "data" array should not be empty
+
+  Scenario: Retrieve breeds using page and limit combined
+    Given the API endpoint "/breeds" is available
+    When I send a GET request to "/breeds?page=2&limit=5"
+    Then the response status code should be 200
+    And the response body should be a valid JSON
+    And the "current_page" field should be 2
+    And the "data" array should contain at most 5 breeds
+
+  Scenario: Retrieve breeds from the last page
+    Given the API endpoint "/breeds" is available
+    When I send a GET request to "/breeds?page={last_page}"
+    Then the response status code should be 200
+    And the response body should be a valid JSON
+    And the "current_page" field should equal the "last_page" field
+    And the "next_page_url" field should be null
+
   # -------------------------
-  # UNHAPPY FLOWS (3)
+  # UNHAPPY FLOWS — (6)
   # -------------------------
 
   Scenario: Retrieve breeds with limit equal to zero
@@ -51,6 +75,27 @@ Feature: Get cat breeds using /breeds endpoint
   Scenario: Retrieve breeds with a non-numeric limit
     Given the API endpoint "/breeds" is available
     When I send a GET request to "/breeds?limit=abc"
+    Then the response status code should be 200 or 400
+    And the response body should be a valid JSON
+    And the response should not expose any server error or stack trace
+
+  Scenario: Retrieve breeds with page beyond the last page
+    Given the API endpoint "/breeds" is available
+    When I send a GET request to "/breeds?page=9999"
+    Then the response status code should be 200
+    And the response body should be a valid JSON
+    And the "data" array should be empty
+
+  Scenario: Retrieve breeds with a negative page
+    Given the API endpoint "/breeds" is available
+    When I send a GET request to "/breeds?page=-1"
+    Then the response status code should be 200 or 400
+    And the response body should be a valid JSON
+    And the response should not expose any server error or stack trace
+
+  Scenario: Retrieve breeds with a non-numeric page
+    Given the API endpoint "/breeds" is available
+    When I send a GET request to "/breeds?page=abc"
     Then the response status code should be 200 or 400
     And the response body should be a valid JSON
     And the response should not expose any server error or stack trace
