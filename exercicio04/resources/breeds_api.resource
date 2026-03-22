@@ -97,7 +97,7 @@ the response should match the breeds JSON schema
     Validate JSON Schema    ${RESPONSE.text}    ${BREED_SCHEMA}
 
 the response should not expose server errors
-    Should Be True    ${RESPONSE.status_code} != 500
+    Should Be True    ${RESPONSE.status_code} < 500    API returned server error: ${RESPONSE.status_code}
     ${body}=    Convert To String    ${RESPONSE.text}
     Should Not Contain    ${body}    stack trace
     Should Not Contain    ${body}    Traceback
@@ -147,10 +147,9 @@ I sort the breed names alphabetically
 the breed names should be in alphabetical order
     ${length}=    Get Length    ${SORTED_NAMES}
     Should Be True    ${length} > 1
-    ${first}=    Get From List    ${SORTED_NAMES}    0
-    ${last_index}=    Evaluate    ${length} - 1
-    ${last}=    Get From List    ${SORTED_NAMES}    ${last_index}
-    Should Be True    """${first}""" <= """${last}"""
+    ${expected}=    Copy List    ${SORTED_NAMES}
+    Sort List    ${expected}
+    Lists Should Be Equal    ${SORTED_NAMES}    ${expected}
 
 I extract unique values for "${field}"
     ${data}=    Get From Dictionary    ${JSON_BODY}    data

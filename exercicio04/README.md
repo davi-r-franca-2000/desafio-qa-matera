@@ -74,7 +74,7 @@ Após a execução, o Robot Framework gera automaticamente três arquivos no dir
 
 - **Nível de log**: `--loglevel DEBUG` para capturar informações detalhadas de depuração.
 - **Títulos customizados**: `--reporttitle "Breeds API Report"` e `--logtitle "Breeds API Log"` para personalizar os relatórios HTML.
-- **Filtro por tags**: Cada caso de teste usa `[Tags]` (`happy`, `unhappy`, `contract`, `data-driven`). Isso permite filtrar execuções com `--include` e `--exclude`.
+- **Filtro por tags**: Cada caso de teste usa `[Tags]` (`happy`, `unhappy`, `contract`, `data-driven`, `extra`). Isso permite filtrar execuções com `--include` e `--exclude`.
 - **Rerun de falhas**: `--rerunfailed output.xml` para reexecutar apenas os testes que falharam.
 - **Merge de resultados**: `rebot --merge` para combinar resultados de múltiplas execuções.
 
@@ -83,9 +83,10 @@ Após a execução, o Robot Framework gera automaticamente três arquivos no dir
 ### Caminhos Felizes (Happy Paths)
 - Requisição sem parâmetros retorna lista paginada de breeds
 - Requisição com `limit` válido respeita o limite solicitado
+- Requisição com `limit` acima do total retorna todas as breeds disponíveis
 
 ### Caminhos Infelizes (Unhappy Paths)
-- `limit=0`, `limit=-1`, `limit=abc` — validam que a API não retorna erros de servidor (500) nem expõe stack traces
+- `limit=0`, `limit=-1`, `limit=abc` — validam que a API não retorna erros de servidor (5xx) nem expõe stack traces
 
 ### Teste de Contrato
 - Valida a resposta completa contra um **JSON Schema** definido em `variables/global_variables.py`
