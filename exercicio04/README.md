@@ -34,7 +34,16 @@ Recomenda-se criar um ambiente virtual antes de instalar as dependências:
 ```bash
 cd exercicio04
 python -m venv venv
+
+# Linux/macOS
 source venv/bin/activate
+
+# Windows (cmd)
+venv\Scripts\activate
+
+# Windows (PowerShell)
+venv\Scripts\Activate.ps1
+
 pip install -r requirements.txt
 ```
 
